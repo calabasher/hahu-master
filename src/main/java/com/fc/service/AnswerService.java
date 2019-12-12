@@ -138,10 +138,6 @@ public class AnswerService {
 		Map<String, Object> map = new HashMap<>();
 		long period = 1000 * 60 * 60 * 24L;
 		long today = new Date().getTime();
-		System.out.println("period:" + period);
-		System.out.println("today:" + today);
-		System.out.println("today - period:" + (today - period));
-		System.out.println(new Date(today - period));
 		List<Answer> answerList = answerMapper.listAnswerByCreateTime(today - period);
 		map.put("answerList", answerList);
 		return map;

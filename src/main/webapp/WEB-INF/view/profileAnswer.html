@@ -144,16 +144,16 @@
 									<span>上一页</span>
 								</#if>
 								
-								<!-- 中间页码 -->
-								<#if pageBean.allPage<=6>
+								<!-- 中间页码  <=  -->
+								<#if pageBean.allPage lte 6 >
 									<#list 1..pageBean.allPage as i>
 										<a href="${base}/profile/${user.userId}?page=${i}">${i}</a>
 									</#list>
-								<#elseif pageBean.curPage<=3>
+								<#elseif pageBean.curPage lte 3>
 									<#list 1..6 as i>
 										<a href="${base}/profile/${user.userId}?page=${i}">${i}</a>
 									</#list>
-								<#elseif pageBean.allPage - pageBean.curPage<=5>
+								<#elseif pageBean.allPage - pageBean.curPage lte 5>
 									<#list pageBean.allPage-5..pageBean.allPage as i>
 										<a href="${base}/profile/${user.userId}?page=${i}">${i}</a>
 									</#list>

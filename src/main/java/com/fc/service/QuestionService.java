@@ -45,12 +45,16 @@ public class QuestionService {
 	private CommentMapper commentMapper;
 	@Autowired
 	private JedisPool jedisPool;
-
+	
+	// 提问
 	public Integer ask(Question question, String topicNameString, Integer userId) {
+		// 将List转成数组
 		String[] topicNames = topicNameString.split(",");
-		System.out.println(Arrays.toString(topicNames));
 		Map<Integer, String> map = new HashMap<>();
-
+		/**
+		 * list 列表，在能直接使用数组的时候，就有使用列表，如一个班的学生的成绩，成绩是可以重复的；
+		 * set 集合，一般用于存放无序的（指顺序不重要）不能重复的对象，如一个班的学生的学号，学号是不能重复的；
+		 */
 		List<Integer> topicIdList = new ArrayList<>();
 		for (String topicName : topicNames) {
 			Topic topic = new Topic();
@@ -77,7 +81,8 @@ public class QuestionService {
 
 		return question.getQuestionId();
 	}
-
+	
+	// @SuppressWarnings注解主要用在取消一些编译器产生的警告对代码左侧行列的遮挡，有时候这会挡住我们断点调试时打的断点。
 	// 获得问题页详情
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getQuestionDetail(Integer questionId, Integer userId) {
@@ -89,14 +94,16 @@ public class QuestionService {
 		}
 		// 获取该问题被浏览次数
 		Jedis jedis = jedisPool.getResource();
+		//  zincrby(key, increment, member) ：如果在名称为key的zset中已经存在元素member，则该元素的score增加increment；否则向集合中添加该元素，其score的值为increment
 		jedis.zincrby(RedisKey.QUESTION_SCANED_COUNT, 1, questionId + "");
+		// zscore(key, element)：返回名称为key的zset中元素element的score
 		question.setScanedCount((int) jedis.zscore(RedisKey.QUESTION_SCANED_COUNT, questionId + "").doubleValue());
 
-		// 获取该问题被关注人数
+		// 获取该问题被关注人数 zcard(key)：返回名称为key的zset的基数
 		Long followedCount = jedis.zcard(questionId + RedisKey.FOLLOWED_QUESTION);
 		question.setFollowedCount(Integer.parseInt(followedCount + ""));
 
-		// 获取10个关注该问题的人
+		// 获取10个关注该问题的人  zrange(key, start, end)：返回名称为key的zset（元素已按score从小到大排序）中的index从start到end的所有元素
 		Set<String> userIdSet = jedis.zrange(questionId + RedisKey.FOLLOWED_QUESTION, 0, 9);
 		List<Integer> userIdList = MyUtil.StringSetToIntegerList(userIdSet);
 		List<User> followedUserList = new ArrayList<>();

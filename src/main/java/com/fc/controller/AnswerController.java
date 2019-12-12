@@ -42,7 +42,7 @@ public class AnswerController {
 		return new Response(0, "");
 	}
 
-	@RequestMapping("/listTodayHotAnswer")
+	@RequestMapping("/test/listTodayHotAnswer")
 	@ResponseBody
 	public Response listTodayHotAnswer() {
 		Map<String, Object> map = answerService.listTodayHotAnswer();

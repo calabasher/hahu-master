@@ -34,7 +34,7 @@
 						<ul>
 							<#list question.questionCommentList as comment>
 								<li class="comment-li" id="question-comment-${comment.questionCommentId}">
-									<img src="${comment.user.avatarUrl}">
+									<!-- <img src="${comment.user.avatarUrl}"> -->
 									<div class="comment-main">
 										<div class="user-name">
 											<#if comment.atUserId?? >
@@ -211,7 +211,7 @@
 					<#list relatedQuestionList as question>
 					<li>
 						<a href="${base}/question/${question.questionId}">${question.questionTitle}</a>
-						<span>${question.answerCount}个回答</span>
+						<span>0个回答</span>
 					</li>
 					</#list>
 				</ul>

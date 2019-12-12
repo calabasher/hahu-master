@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import com.fc.util.MyConstant;
 
+//runnable接口的run方法实现多线程
 public class MailTask implements Runnable {
 
 	private String code;
@@ -21,8 +22,9 @@ public class MailTask implements Runnable {
 		this.javaMailSender = javaMailSender;
 		this.operation = operation;
 	}
-
-	@Override
+	
+	// 线程实现调用都会携带run方法， 等待调用线程对象的run()方法
+	@Override 
 	public void run() {
 		javaMailSender.send(new MimeMessagePreparator() {
 			@Override

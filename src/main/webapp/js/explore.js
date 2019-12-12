@@ -5,7 +5,7 @@ $(function(){
 function listTodayHotAnswer(){
 	var todayHotList = $("#todayHotList");
 	$.ajax({
-	    url:basepath + "listTodayHotAnswer",
+	    url:basepath + "test/listTodayHotAnswer",
 	    type:"post",
 	    data:{},
 	    processData:false,

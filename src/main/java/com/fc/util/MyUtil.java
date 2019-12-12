@@ -15,6 +15,7 @@ public class MyUtil {
 	public static String md5(String plainText) {
 		byte[] secretBytes = null;
 		try {
+			// getBytes() 是Java编程语言中将一个字符串转化为一个字节数组byte[]的方法
 			secretBytes = MessageDigest.getInstance("md5").digest(plainText.getBytes());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("没有md5这个算法！");

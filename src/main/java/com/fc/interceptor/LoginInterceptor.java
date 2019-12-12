@@ -50,6 +50,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 		// cookie中是否有loginToken
 		if (StringUtils.isEmpty(loginToken)) {
+			// getRequestDispatcher()包含两个方法，分别是请求转发和请求包含。
 			request.getRequestDispatcher("toLogin").forward(request, response);
 			return false;
 		}

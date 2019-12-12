@@ -47,8 +47,6 @@ public class TopicService {
 
 	public List<Topic> listTopicByParentTopicId(Integer parentTopicId) {
 		List<Topic> list = topicMapper.listTopicByParentId(parentTopicId);
-		System.out.println(parentTopicId);
-		System.out.println(list);
 		return list;
 	}
 

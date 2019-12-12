@@ -43,6 +43,11 @@ public class QuestionController {
 
 	@RequestMapping("/question/{questionId}")
 	public String questionDetail(@PathVariable Integer questionId, HttpServletRequest request, Model model) {
+//		try {
+//			
+//		}catch(Exception e) {
+//			throw new RuntimeException("类型错误");
+//		}
 		Integer userId = userService.getUserIdFromRedis(request);
 
 		Map<String, Object> questionDetail = questionService.getQuestionDetail(questionId, userId);

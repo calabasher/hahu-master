@@ -107,7 +107,7 @@ public class UserService {
 		user.setUsername(username);
 		user.setAvatarUrl(MyConstant.QINIU_IMAGE_URL + "head.jpg");
 
-		// 发送邮件
+		// 发送邮件 taskExecutor 异步的处理，邮件的发送成功与否接下来的事情并不关心
 		taskExecutor.execute(new MailTask(activateCode, user.getEmail(), javaMailSender, 1));
 
 		// 向数据库插入记录
@@ -126,8 +126,9 @@ public class UserService {
 
 	/* 登录 */
 	public Map<String, Object> login(String email, String password, HttpServletResponse response) {
+		// 在这个声明中，map就是一个容器，主要调用put（）、get（）方法；
 		Map<String, Object> map = new HashMap<>();
-
+		// System.out.println("map:" + map);
 		// 校验用户名和密码是否正确
 		Integer userId = userMapper.selectUserIdByEmailAndPassword(email, MyUtil.md5(password));
 		if (userId == null) {
@@ -147,10 +148,15 @@ public class UserService {
 		Cookie cookie = new Cookie("loginToken", loginToken);
 		cookie.setPath("/");
 		cookie.setMaxAge(60 * 60 * 24 * 30);
+		// response.addCookie(c)一旦执行，服务器端会自动发回消息头set-cookie给浏览器
 		response.addCookie(cookie);
 
 		// 将token:userId存入redis，并设置过期时间
 		Jedis jedis = jedisPool.getResource();
+		// set(String key, String value, String nxxx, String expx, long time)接口详解  增加（或覆盖）数据项 
+		// nxxx： 只能取NX或者XX，如果取NX，则只有当key不存在是才进行set，如果取XX，则只有当key已经存在时才进行set
+		// expx： 只能取EX或者PX，代表数据过期时间的单位，EX代表秒，PX代表毫秒。
+		// time： 过期时间，单位是expx所代表的单位。
 		jedis.set(loginToken, userId.toString(), "NX", "EX", 60 * 60 * 24 * 30);
 		jedisPool.returnResource(jedis);
 
@@ -232,7 +238,9 @@ public class UserService {
 
 		Jedis jedis = jedisPool.getResource();
 		String userId = jedis.get(loginToken);
-
+		if(userId == null) {
+			return null;
+		}
 		return Integer.parseInt(userId);
 	}
 
@@ -353,7 +361,8 @@ public class UserService {
 	public Map<String, Object> getIndexDetail(Integer userId, Integer curPage) {
 		Map<String, Object> map = new HashMap<>();
 		Jedis jedis = jedisPool.getResource();
-
+		// zrange 获取ZSet里下标[i,j]区间元素val
+		// Set是集合的意思，是同种对象的集合
 		Set<String> idSet = jedis.zrange(userId + RedisKey.FOLLOW_PEOPLE, 0, -1);
 		List<Integer> idList = MyUtil.StringSetToIntegerList(idSet);
 		List<Answer> answerList = new ArrayList<Answer>();

@@ -3,6 +3,7 @@ package com.fc.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//T 泛型 传进来 什么 ， 返回什么
 public class PageBean<T> {
 
 	private int allPage;
