@@ -64,7 +64,16 @@ public class UserService {
 
 	@Autowired
 	private JedisPool jedisPool;
-
+	
+	public Boolean isExistEmail(String email) {
+		Boolean isExist = false;
+		int emailCount = userMapper.selectEmailCount(email);
+		if (emailCount > 0) {
+			isExist = true;
+		}
+		return isExist;
+	}
+	
 	/* 注册 */
 	public Map<String, String> register(String username, String email, String password) {
 		Map<String, String> map = new HashMap<>();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fc.exception.DomainException;
 import com.fc.model.Answer;
 import com.fc.model.Collection;
 import com.fc.model.PageBean;
@@ -26,6 +27,7 @@ import com.fc.service.QuestionService;
 import com.fc.service.TopicService;
 import com.fc.service.UserService;
 import com.fc.util.Response;
+import com.fc.util.ResultCode;
 
 @Controller
 @RequestMapping("/")
@@ -60,8 +62,14 @@ public class UserController {
 
 	@RequestMapping("/login")
 	@ResponseBody
-	public Response login(String email, String password, HttpServletResponse response) {
-
+//	public Response login(String email, String password, HttpServletResponse response) {
+	public Response login(HttpServletResponse response, HttpServletRequest request) {
+		String email = request.getParameter("email");
+        String password = request.getParameter("password");
+		boolean has_phone = userService.isExistEmail(email);
+//        if (!has_phone) {
+//           throw new DomainException(ResultCode.PHONE_EXIST);
+//        }
 		Map<String, Object> map = userService.login(email, password, response);
 		if (map.get("error") == null) {
 			return new Response(0, "", map);
